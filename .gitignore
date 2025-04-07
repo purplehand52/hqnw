@@ -1,9 +1,9 @@
 # Ignore bin, include, lib, lib64, share
-./Code/bin/
-./Code/include/
-./Code/lib/
-./Code/lib64/
-./Code/share/
+Code/bin/
+Code/include/
+Code/lib/
+Code/lib64/
+Code/share/
 
 # Ignore all png files
 *.png

@@ -21,13 +21,15 @@ def define_flow_problem(G: nx.DiGraph, demand: list[tuple[int, int], int, int]):
     """
     # Variables
     # Indicator variables for each demand (chi)
-    demand_vars = cp.Variable(len(demand), boolean=True)
+    # demand_vars = cp.Variable(len(demand), boolean=True)
+    demand_vars = cp.Variable(len(demand), nonneg=True)
 
     # Flow variables for each demand and each edge (f)
     flow_vars = cp.Variable((len(demand), len(G.edges())), nonneg=True)
 
     # Indicator variable for flow for a demand and each edge (delta)
-    edge_deltas = cp.Variable((len(demand), len(G.edges())), boolean=True)
+    # edge_deltas = cp.Variable((len(demand), len(G.edges())), boolean=True)
+    edge_deltas = cp.Variable((len(demand), len(G.edges())), nonneg=True)
 
     # Potential variables for every demand and node (p)
     potentials = cp.Variable((len(demand), len(G.nodes())), nonneg=True)
@@ -43,6 +45,11 @@ def define_flow_problem(G: nx.DiGraph, demand: list[tuple[int, int], int, int]):
 
     # Constraints
     constraints = []
+
+    # Restrict deltas less than 1
+    # for i, _ in enumerate(demand):
+    #    for j, _ in enumerate(G.edges()):
+    #        constraints.append(edge_deltas[i, j] <= 1)
 
     # Superimposed flow on each edge
     superimposed_constraints = []

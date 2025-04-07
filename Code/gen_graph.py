@@ -126,10 +126,7 @@ if __name__ == "__main__":
 
     # Generate the graph
     G = generate_random_hqnw(num_clients, num_repeaters, rep_coeff, gen_coeff, client_coeff, mean_cap)
-    draw_graph(G)    
-
-    # Save the graph to a file
-    draw_graph(G, filename="hqnw_graph.png")
+    draw_graph(G, filename="hqnw_graph.png")    
 
     # Save the graph to a GML file
     save_graph(G, filename="hqnw_graph.gml")

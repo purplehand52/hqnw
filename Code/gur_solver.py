@@ -133,13 +133,26 @@ def solve_flow_problem(model):
 # Example usage
 if __name__ == "__main__":
     # Load the graph from gml
-    G = nx.read_gml("hqnw_graph.gml")
+    # G = nx.read_gml("hqnw_graph.gml")
+
+    # Create an example directed graph
+    G = nx.DiGraph()
+    G.add_node("generator_0", type="generator")
+    G.add_node("repeater_0", type="repeater")
+    G.add_node("repeater_1", type="repeater")
+    G.add_node("client_0", type="client")
+    G.add_node("client_1", type="client")
+
+    G.add_edge("generator_0", "repeater_0", capacity=10)
+    G.add_edge("generator_0", "repeater_1", capacity=5)
+    G.add_edge("repeater_0", "repeater_1", capacity=5)
+    G.add_edge("repeater_0", "client_0", capacity=5)
+    G.add_edge("repeater_1", "client_1", capacity=4)
+
 
     # Define demand (source, destination, qubit demand, threshold)
     demand = [
-        (0, 1, 2, 10),
-        (1, 2, 2, 10),
-        (0, 2, 2, 10)
+        (0, 1, 4, 3),
     ]
 
     # Define the flow problem

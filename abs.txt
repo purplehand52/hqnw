@@ -1,5 +1,19 @@
-Quantum networks will serve as an essential tool for the realization of quantum communication, distributed quantum computing, quantum key distribution and many such applications. These networks will become necessary to make quantum computing accessible to academicians and public-users worldwide.
+Quantum networks will serve as an essential tool for the realization of quantum
+communication, distributed quantum computing, quantum key distribution and many
+such applications. These networks will become necessary to make quantum
+computing accessible to academicians and public-users worldwide.
 
-Existing work on quantum networks chiefly focusses on simple peer-to-peer networks with arbitrary graph structures and simple topologies, and possible routing mechanisms for qubit transfer amongst nodes via entanglement swapping. However, classical networks are often organized in a hierarchical manner with more centralization, resulting in efficient routing and communication.
+Existing work on quantum networks chiefly focusses on simple peer-to-peer
+networks with arbitrary graph structures and simple topologies, and possible
+routing mechanisms for qubit transfer amongst nodes via entanglement swapping.
+However, classical networks are often organized in a hierarchical manner with
+more centralization, resulting in efficient routing and communication.
 
-We propose a hierarchical quantum network architecture by utilizing classical network principles for hierarchy and unique entanglement pair assignment amongst end-users using a centralized node which generates entangled pairs for the entire network. We also look at the limitations posed by noisy channels contributing to constraints on fidelity and introduce a routing solution to account for these limitations while maximizing the demands satisfied. We also briefly explore a mechanism to generate virtual edges for quick routing of qubits in the network through our proposed apparatus.
+We propose a hierarchical quantum network architecture by utilizing classical
+network principles for hierarchy and unique entanglement pair assignment amongst
+end-users using a centralized node which generates entangled pairs for the
+entire network. We also look at the limitations posed by noisy channels
+contributing to constraints on fidelity and introduce a routing solution to
+account for these limitations while maximizing the demands satisfied. We also
+briefly explore a mechanism to generate virtual edges for quick routing of
+qubits in the network through our proposed apparatus.

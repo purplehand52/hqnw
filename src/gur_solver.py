@@ -3,19 +3,20 @@ import gurobipy as gp
 from gurobipy import GRB
 import networkx as nx
 import numpy as np
+from utils.demand import Demand
 
 # Define Problem class
 
-def define_flow_problem(G: nx.DiGraph, demand: list[tuple[int, int], int, int]):
+def define_flow_problem(G: nx.DiGraph, demand: list[Demand]):
     """
     Define the flow problem on a quantum hierarchical network.
 
     Parameters:
-    G (nx.DiGraph): 
-        Directed graph representing the quantum network.
-    demand (List[(int, int), int, int]): 
-        Contains source, destination clients, qubit demand between them, and distance threshold
-        for each demand.
+        G (nx.DiGraph): 
+            Directed graph representing the quantum network.
+        demand (List[Demand]): 
+            Contains source, destination clients, qubit demand between them, and distance threshold
+            for each demand.
 
     Returns:
         A tuple containing variables and the defined problem.
@@ -152,7 +153,7 @@ if __name__ == "__main__":
 
     # Define demand (source, destination, qubit demand, threshold)
     demand = [
-        (0, 1, 4, 3),
+        Demand(0, 1, 4, 3),
     ]
 
     # Define the flow problem
@@ -165,7 +166,7 @@ if __name__ == "__main__":
     if solution:
         print("Optimal solution found:")
         for var in model.getVars():
-            print(f"{var.varName}: {var.x}")
+            print(f"{var.VarName}: {var.X}")
         print(f"Objective value: {model.objVal}")
     else:
         print("No optimal solution found.")

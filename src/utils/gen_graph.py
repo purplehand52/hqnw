@@ -10,18 +10,18 @@ def generate_random_hqnw(num_clients: int, num_repeaters: int, rep_coeff: float,
     Generate a random hierarchical quantum network directional graph with capacities for each edge.
 
     Parameters:
-    num_clients (int): Number of clients.
-    num_repeaters (int): Number of repeaters.
-    rep_coeff (float): Coefficient for the number of repeaters.
-    gen_coeff (float): Coefficient for the number of generators.
-    client_coeff (float): Coefficient for the number of clients.
-    mean_cap (int): Mean capacity for the edges.
+        num_clients (int): Number of clients.
+        num_repeaters (int): Number of repeaters.
+        rep_coeff (float): Coefficient for the number of repeaters.
+        gen_coeff (float): Coefficient for the number of generators.
+        client_coeff (float): Coefficient for the number of clients.
+        mean_cap (int): Mean capacity for the edges.
 
     Notes:
-    Coefficients are a measure of controlling the number of edges in the graph.
+    - Coefficients are a measure of controlling the number of edges in the graph.
 
     Returns:
-    nx.DiGraph: A directed graph with capacities for each edge.
+        nx.DiGraph: A directed graph with capacities for each edge.
     """
 
     # Create a directed graph
@@ -72,7 +72,7 @@ def generate_random_hqnw(num_clients: int, num_repeaters: int, rep_coeff: float,
     return G
 
 # Draw the graph
-def draw_graph(G: nx.DiGraph, filename: str = None):
+def draw_graph(G: nx.DiGraph, filename: str | None = None):
     """
     Draw the graph with node labels and edge capacities.
 

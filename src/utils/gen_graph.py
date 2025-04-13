@@ -37,17 +37,18 @@ def generate_random_hqnw(num_clients: int, num_repeaters: int, rep_coeff: float,
     # Add edges from generator to repeaters
     for i in range(num_repeaters):
         if random.random() < gen_coeff:
-            capacity = math.ceil(random.gauss(mean_cap, mean_cap/2))
-            if capacity > 0:
-                G.add_edge("generator", f"repeater_{i}", capacity=capacity)
+            # capacity = math.ceil(random.gauss(mean_cap, mean_cap/2))
+            # Changed to expo to avoid negative capacity
+            capacity = math.ceil(random.expovariate(1/mean_cap)) + 1
+            G.add_edge("generator", f"repeater_{i}", capacity=capacity)
 
     # Add edges from repeaters to other repeaters
     for i in range(num_repeaters):
         for j in range(num_repeaters):
             if i != j and random.random() < rep_coeff:
-                capacity = math.ceil(random.gauss(mean_cap, mean_cap/2))
-                if capacity > 0:
-                    G.add_edge(f"repeater_{i}", f"repeater_{j}", capacity=capacity)
+                # Changed to expo to avoid negative capacity
+                capacity = math.ceil(random.expovariate(1/mean_cap)) + 1
+                G.add_edge(f"repeater_{i}", f"repeater_{j}", capacity=capacity)
 
     # Add edges from repeaters to clients
     for i in range(num_clients):
@@ -56,9 +57,9 @@ def generate_random_hqnw(num_clients: int, num_repeaters: int, rep_coeff: float,
             for j in range(num_repeaters):
                 if random.random() < client_coeff:
                     isolated = False
-                    capacity = math.ceil(random.gauss(mean_cap, mean_cap/2))
-                    if capacity > 0:
-                        G.add_edge(f"repeater_{j}", f"client_{i}", capacity=capacity)
+                    # Changed to expo to avoid negative capacity
+                    capacity = math.ceil(random.expovariate(1/mean_cap)) + 1
+                    G.add_edge(f"repeater_{j}", f"client_{i}", capacity=capacity)
 
     # Remove self-loops
     G.remove_edges_from(nx.selfloop_edges(G))

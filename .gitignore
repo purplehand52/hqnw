@@ -4,6 +4,7 @@ src/include/
 src/lib/
 src/lib64/
 src/share/
+**/__pycache___
 
 # Ignore all png files
 *.png
@@ -11,3 +12,5 @@ src/share/
 *.gml
 # Ignore gurobi license files
 gurobi.lic
+
+solution.txt

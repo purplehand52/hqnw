@@ -3,9 +3,9 @@ import itertools
 import gurobipy as gp
 from gurobipy import GRB
 import networkx as nx
-from utils.gen_graph import generate_random_hqnw
-from utils.demand import Demand
-
+from utils.gen_graph import generate_random_hqnw, Params
+from utils.demand import generate_demand
+import gurobi_logtools as glt
 # Define Problem class
 
 def edge_formulation(G: nx.DiGraph, demands: list[tuple[int, int], int, int]):
@@ -24,7 +24,7 @@ def edge_formulation(G: nx.DiGraph, demands: list[tuple[int, int], int, int]):
 
     """
     # Create a new model
-    model = gp.Model("QuantumFlowProblem")
+    model = gp.Model("QuantumFlowProblem", env=gp.Env("gurobi.log"))
 
     # Variables
     # Indicator variables for each demand (chi)
@@ -192,48 +192,63 @@ def solve_flow_problem(model: gp.Model):
 
     # Check if the model is feasible
     if model.status == GRB.OPTIMAL:
-        print("Optimal solution found:")
+        # print("Optimal solution found:")
         with open("solution.txt", "w") as f:
             for var in model.getVars():
                 print(f"{var.varName}: {var.x}", file=f)
             print(f"Objective value: {model.objVal}", file=f)
+            
+        print("Total work?: ", model.Work)
     else:
         print("No optimal solution found.")
         return None
 
 # Example usage
 if __name__ == "__main__":
-    G = generate_random_hqnw(15, 250, 0.06, 0.3, 0.3, 10)
-    print(f"Generated graph with {len(G.nodes)} nodes and {len(G.edges)} edges.")
+    params = Params("inp-params.txt")
 
+    # # Define demand (source, destination, qubit demand, threshold)
+    # demand = [
+    #     (0, 1, 4, 50),
+    #     (1, 2, 3, 50),
+    #     (2, 3, 2, 50),
+    #     (3, 4, 1, 50),
+    #     (4, 5, 2, 50),
+    #     (5, 6, 3, 50),
+    #     (6, 7, 4, 50),
+    #     (7, 8, 5, 50),
+    #     (8, 9, 6, 50),
+    #     (9, 10, 7, 50),
+    #     (10, 11, 8, 50),
+    #     (11, 12, 9, 50),
+    #     (12, 13, 10, 50),
+    #     (0, 13, 10, 1),
+    # ]
 
-    # Define demand (source, destination, qubit demand, threshold)
-    demand = [
-        (0, 1, 4, 25),
-        (1, 2, 3, 25),
-        (2, 3, 2, 25),
-        (3, 4, 1, 25),
-        (4, 5, 2, 25),
-        (5, 6, 3, 25),
-        (6, 7, 4, 25),
-        (7, 8, 5, 25),
-        (8, 9, 6, 25),
-        (9, 10, 7, 25),
-        (10, 11, 8, 25),
-        (11, 12, 9, 25),
-        (12, 13, 10, 25),
-        (0, 13, 10, 1),
-    ]
+    demand = generate_demand(params)
+    print(demand)
+    
+    with open("gurobi.log", "w") as f:
+        pass
+    
 
-    # Define the flow problem
-    model, demand_vars, flow_vars, potentials, edge_deltas = edge_formulation(G, demand)
-    # Solve the flow problem
-    solve_flow_problem(model)
+    for _ in range(3):
+        G = generate_random_hqnw(params)
+        print(f"Generated graph with {len(G.nodes)} nodes and {len(G.edges)} edges.")
+        # Define the flow problem
+        model, demand_vars, flow_vars, potentials, edge_deltas = edge_formulation(G, demand)
+        # Solve the flow problem
+        solve_flow_problem(model)
         
     # Taking too long
     # path_model, path_demand_vars, path_flow_vars, paths, paths_e = path_formulation(G, demand)
     # solve_flow_problem(path_model)
-
+    
+    df = glt.get_dataframe("gurobi.log")
+    with open("out.csv", "a") as f:
+        print(f"{df["Runtime"].mean():.3}", file=f)
+        
+    
 
 
     

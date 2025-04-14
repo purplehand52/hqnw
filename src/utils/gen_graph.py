@@ -4,8 +4,36 @@ import networkx as nx
 import math
 import matplotlib.pyplot as plt
 
+class Params:
+    """
+    Class to hold parameters for generating a random directed graph.
+    """
+    def __init__(self, num_clients: int, num_repeaters: int, rep_coeff: float, gen_coeff: float, client_coeff: float, mean_cap: int, mean_demand):
+        self.num_clients = num_clients
+        self.num_repeaters = num_repeaters
+        self.rep_coeff = rep_coeff
+        self.gen_coeff = gen_coeff
+        self.client_coeff = client_coeff
+        self.mean_cap = mean_cap
+        self.mean_demand = mean_demand
+        
+    def __init__(self, fname: str):
+        """
+        Initialize parameters from a file.
+        """
+        with open(fname, 'r') as f:
+            lines = f.readlines()[0].split(' ')
+            self.num_clients = int(lines[0].strip())
+            self.num_repeaters = int(lines[1].strip())
+            self.rep_coeff = float(lines[2].strip())
+            self.gen_coeff = float(lines[3].strip())
+            self.client_coeff = float(lines[4].strip())
+            self.mean_cap = int(lines[5].strip())
+            self.mean_demand = int(lines[6].strip())
+        
+
 # Generate random hierarchical quantum network directional graph with capacities for each edge
-def generate_random_hqnw(num_clients: int, num_repeaters: int, rep_coeff: float, gen_coeff: float, client_coeff: float, mean_cap: int):
+def generate_random_hqnw(params: Params) -> nx.DiGraph:
     """
     Generate a random hierarchical quantum network directional graph with capacities for each edge.
 
@@ -28,37 +56,37 @@ def generate_random_hqnw(num_clients: int, num_repeaters: int, rep_coeff: float,
     G = nx.DiGraph()
 
     # Add nodes for clients, repeaters, and generators
-    for i in range(num_clients):
+    for i in range(params.num_clients):
         G.add_node(f"client_{i}", type="client")
-    for i in range(num_repeaters):
+    for i in range(params.num_repeaters):
         G.add_node(f"repeater_{i}", type="repeater")
     G.add_node("generator", type="generator")
 
     # Add edges from generator to repeaters
-    for i in range(num_repeaters):
-        if random.random() < gen_coeff:
+    for i in range(params.num_repeaters):
+        if random.random() < params.gen_coeff:
             # capacity = math.ceil(random.gauss(mean_cap, mean_cap/2))
             # Changed to expo to avoid negative capacity
-            capacity = math.ceil(random.expovariate(1/mean_cap)) + 1
+            capacity = math.ceil(random.expovariate(1/params.mean_cap)) + 1
             G.add_edge("generator", f"repeater_{i}", capacity=capacity)
 
     # Add edges from repeaters to other repeaters
-    for i in range(num_repeaters):
-        for j in range(num_repeaters):
-            if i != j and random.random() < rep_coeff:
+    for i in range(params.num_repeaters):
+        for j in range(params.num_repeaters):
+            if i != j and random.random() < params.rep_coeff:
                 # Changed to expo to avoid negative capacity
-                capacity = math.ceil(random.expovariate(1/mean_cap)) + 1
+                capacity = math.ceil(random.expovariate(1/params.mean_cap)) + 1
                 G.add_edge(f"repeater_{i}", f"repeater_{j}", capacity=capacity)
 
     # Add edges from repeaters to clients
-    for i in range(num_clients):
+    for i in range(params.num_clients):
         isolated = True
         while isolated:
-            for j in range(num_repeaters):
-                if random.random() < client_coeff:
+            for j in range(params.num_repeaters):
+                if random.random() < params.client_coeff:
                     isolated = False
                     # Changed to expo to avoid negative capacity
-                    capacity = math.ceil(random.expovariate(1/mean_cap)) + 1
+                    capacity = math.ceil(random.expovariate(1/params.mean_cap)) + 1
                     G.add_edge(f"repeater_{j}", f"client_{i}", capacity=capacity)
 
     # Remove self-loops
@@ -66,7 +94,7 @@ def generate_random_hqnw(num_clients: int, num_repeaters: int, rep_coeff: float,
 
     # Remove repeater nodes with no paths to clients
     for node in list(G.nodes):
-        if G.nodes[node]["type"] == "repeater" and not any(G.has_edge(node, f"client_{j}") for j in range(num_clients)):
+        if G.nodes[node]["type"] == "repeater" and not any(G.has_edge(node, f"client_{j}") for j in range(params.num_clients)):
             G.remove_node(node)
 
     # Return the generated graph

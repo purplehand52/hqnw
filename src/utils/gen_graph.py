@@ -8,7 +8,7 @@ class Params:
     """
     Class to hold parameters for generating a random directed graph.
     """
-    def __init__(self, num_clients: int, num_repeaters: int, rep_coeff: float, gen_coeff: float, client_coeff: float, mean_cap: int, mean_demand):
+    def __init__(self, num_clients: int, num_repeaters: int, rep_coeff: float, gen_coeff: float, client_coeff: float, mean_cap: int, mean_demand: int, alpha: float = 2):
         self.num_clients = num_clients
         self.num_repeaters = num_repeaters
         self.rep_coeff = rep_coeff
@@ -16,6 +16,7 @@ class Params:
         self.client_coeff = client_coeff
         self.mean_cap = mean_cap
         self.mean_demand = mean_demand
+        self.alpha = alpha
         
     def __init__(self, fname: str):
         """
@@ -30,6 +31,11 @@ class Params:
             self.client_coeff = float(lines[4].strip())
             self.mean_cap = int(lines[5].strip())
             self.mean_demand = int(lines[6].strip())
+            if len(lines) > 7:
+                self.alpha = float(lines[7].strip())
+            else:
+                self.alpha = 2
+            
         
 
 # Generate random hierarchical quantum network directional graph with capacities for each edge

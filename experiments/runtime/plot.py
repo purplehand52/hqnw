@@ -7,7 +7,7 @@ ranges = {
     "rep_coeff": ([0.01, 0.02, 0.03, 0.04, 0.05], "Repeater Edge Density"),
 }
 
-df = np.loadtxt("out.csv", delimiter=",", dtype=float)
+df = np.loadtxt("experiments/runtime/out.csv", delimiter=",", dtype=float)
 
 a = sys.argv[1]
 s = ranges[a]
@@ -23,4 +23,4 @@ for i, x in zip(s[0], df):
     
 plt.legend()
 
-plt.savefig(f"{a}.png")
+plt.savefig(f"experiments/runtime/{a}.png")

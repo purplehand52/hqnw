@@ -1,5 +1,5 @@
 
-Gurobi 12.0.1 (mac64[arm], Python) logging started Mon Apr 14 18:47:21 2025
+Gurobi 12.0.1 (mac64[arm], Python) logging started Tue Apr 15 00:01:24 2025
 
 Set parameter Username
 Set parameter LicenseID to value 2650602
@@ -10,125 +10,139 @@ Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (mac64[arm] - Darwin 23.4.0 23E
 CPU model: Apple M1
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 
-Optimize a model with 75678 rows, 73515 columns and 275652 nonzeros
-Model fingerprint: 0xc89c6660
-Variable types: 3210 continuous, 70305 integer (35160 binary)
+Optimize a model with 213874 rows, 211320 columns and 779204 nonzeros
+Model fingerprint: 0xf3b83b3f
+Variable types: 9450 continuous, 201870 integer (100950 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 9e+01]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [2e+00, 9e+01]
+Found heuristic solution: objective -0.0000000
+Presolve removed 199977 rows and 191995 columns
+Presolve time: 2.00s
+Presolved: 13897 rows, 19325 columns, 55317 nonzeros
+Variable types: 300 continuous, 19025 integer (5183 binary)
+Performing another presolve...
+Presolve removed 13694 rows and 18839 columns
+Presolve time: 0.02s
+
+Root relaxation: objective 2.950000e+01, 145 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   29.50000    0    1   -0.00000   29.50000      -     -    2s
+H    0     0                      29.0000000   29.50000  1.72%     -    2s
+     0     0   29.50000    0    1   29.00000   29.50000  1.72%     -    2s
+
+Explored 1 nodes (145 simplex iterations) in 2.21 seconds (3.21 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 29 -0 -0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.900000000000e+01, best bound 2.900000000000e+01, gap 0.0000%
+
+Gurobi 12.0.1 (mac64[arm], Python) logging started Tue Apr 15 00:01:30 2025
+
+Set parameter Username
+Set parameter LicenseID to value 2650602
+Set parameter LogFile to value "gurobi.log"
+Academic license - for non-commercial use only - expires 2026-04-12
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (mac64[arm] - Darwin 23.4.0 23E214)
+
+CPU model: Apple M1
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 212867 rows, 210330 columns and 776558 nonzeros
+Model fingerprint: 0xb009863d
+Variable types: 9480 continuous, 200850 integer (100440 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 8e+01]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [2e+00, 8e+01]
+Found heuristic solution: objective -0.0000000
+Presolve removed 188931 rows and 189644 columns
+Presolve time: 1.72s
+Presolved: 23936 rows, 20686 columns, 75185 nonzeros
+Variable types: 1813 continuous, 18873 integer (5379 binary)
+Performing another presolve...
+Presolve removed 23748 rows and 20290 columns
+Presolve time: 0.04s
+
+Root relaxation: objective 2.910909e+01, 187 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   29.10909    0    5   -0.00000   29.10909      -     -    1s
+H    0     0                       5.0000000   29.10909   482%     -    1s
+H    0     0                       8.0000000   29.10909   264%     -    1s
+H    0     0                      21.0000000   29.10909  38.6%     -    1s
+H    0     0                      25.0000000   29.10909  16.4%     -    1s
+     0     0   27.00000    0    7   25.00000   27.00000  8.00%     -    1s
+H    0     0                      26.0000000   27.00000  3.85%     -    1s
+     0     0   27.00000    0    8   26.00000   27.00000  3.85%     -    1s
+H    0     0                      27.0000000   27.00000  0.00%     -    1s
+     0     0   27.00000    0    8   27.00000   27.00000  0.00%     -    1s
+
+Cutting planes:
+  Gomory: 5
+  Implied bound: 15
+  MIR: 4
+  Flow cover: 3
+  RLT: 1
+  Relax-and-lift: 4
+
+Explored 1 nodes (263 simplex iterations) in 1.97 seconds (2.87 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 8: 27 26 25 ... -0
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.700000000000e+01, best bound 2.700000000000e+01, gap 0.0000%
+
+Gurobi 12.0.1 (mac64[arm], Python) logging started Tue Apr 15 00:01:36 2025
+
+Set parameter Username
+Set parameter LicenseID to value 2650602
+Set parameter LogFile to value "gurobi.log"
+Academic license - for non-commercial use only - expires 2026-04-12
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (mac64[arm] - Darwin 23.4.0 23E214)
+
+CPU model: Apple M1
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 224392 rows, 221670 columns and 818604 nonzeros
+Model fingerprint: 0x314cf6ef
+Variable types: 9720 continuous, 211950 integer (105990 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+02]
   Objective range  [1e+00, 1e+00]
   Bounds range     [1e+00, 1e+00]
   RHS range        [2e+00, 1e+02]
 Found heuristic solution: objective -0.0000000
-Presolve removed 68954 rows and 69677 columns
-Presolve time: 0.57s
-Presolved: 6724 rows, 3838 columns, 17240 nonzeros
-Variable types: 571 continuous, 3267 integer (1243 binary)
+Presolve removed 206597 rows and 198661 columns
+Presolve time: 1.95s
+Presolved: 17795 rows, 23009 columns, 68965 nonzeros
+Variable types: 450 continuous, 22559 integer (6512 binary)
 Performing another presolve...
-Presolve removed 6697 rows and 3784 columns
-Presolve time: 0.01s
-Found heuristic solution: objective 5.0000000
+Presolve removed 17617 rows and 22556 columns
+Presolve time: 0.02s
 
-Root relaxation: objective 1.300000e+01, 9 iterations, 0.00 seconds (0.00 work units)
+Root relaxation: objective 2.800000e+01, 150 iterations, 0.00 seconds (0.00 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-*    0     0               0      13.0000000   13.00000  0.00%     -    0s
+*    0     0               0      28.0000000   28.00000  0.00%     -    2s
 
-Explored 1 nodes (9 simplex iterations) in 0.65 seconds (0.90 work units)
+Explored 1 nodes (150 simplex iterations) in 2.23 seconds (3.25 work units)
 Thread count was 8 (of 8 available processors)
 
-Solution count 3: 13 5 -0 
+Solution count 3: 28 -0 -0 
 
 Optimal solution found (tolerance 1.00e-04)
-Best objective 1.300000000000e+01, best bound 1.300000000000e+01, gap 0.0000%
-
-Gurobi 12.0.1 (mac64[arm], Python) logging started Mon Apr 14 18:47:23 2025
-
-Set parameter Username
-Set parameter LicenseID to value 2650602
-Set parameter LogFile to value "gurobi.log"
-Academic license - for non-commercial use only - expires 2026-04-12
-Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (mac64[arm] - Darwin 23.4.0 23E214)
-
-CPU model: Apple M1
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
-
-Optimize a model with 75260 rows, 73110 columns and 273756 nonzeros
-Model fingerprint: 0xf73d17ec
-Variable types: 3195 continuous, 69915 integer (34965 binary)
-Coefficient statistics:
-  Matrix range     [1e+00, 8e+01]
-  Objective range  [1e+00, 1e+00]
-  Bounds range     [1e+00, 1e+00]
-  RHS range        [2e+00, 8e+01]
-Found heuristic solution: objective -0.0000000
-Presolve removed 70646 rows and 68471 columns
-Presolve time: 0.51s
-Presolved: 4614 rows, 4639 columns, 13166 nonzeros
-Variable types: 0 continuous, 4639 integer (2016 binary)
-Performing another presolve...
-Presolve removed 4559 rows and 4544 columns
-Presolve time: 0.00s
-Found heuristic solution: objective 5.0000000
-
-Root relaxation: objective 1.464706e+01, 31 iterations, 0.00 seconds (0.00 work units)
-
-    Nodes    |    Current Node    |     Objective Bounds      |     Work
- Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
-
-     0     0   14.64706    0    9    5.00000   14.64706   193%     -    0s
-H    0     0                      14.0000000   14.64706  4.62%     -    0s
-     0     0   14.64706    0    9   14.00000   14.64706  4.62%     -    0s
-
-Explored 1 nodes (31 simplex iterations) in 0.54 seconds (0.80 work units)
-Thread count was 8 (of 8 available processors)
-
-Solution count 3: 14 5 -0 
-
-Optimal solution found (tolerance 1.00e-04)
-Best objective 1.400000000000e+01, best bound 1.400000000000e+01, gap 0.0000%
-
-Gurobi 12.0.1 (mac64[arm], Python) logging started Mon Apr 14 18:47:25 2025
-
-Set parameter Username
-Set parameter LicenseID to value 2650602
-Set parameter LogFile to value "gurobi.log"
-Academic license - for non-commercial use only - expires 2026-04-12
-Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (mac64[arm] - Darwin 23.4.0 23E214)
-
-CPU model: Apple M1
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
-
-Optimize a model with 77926 rows, 75690 columns and 284364 nonzeros
-Model fingerprint: 0xb4f75f9e
-Variable types: 3195 continuous, 72495 integer (36255 binary)
-Coefficient statistics:
-  Matrix range     [1e+00, 8e+01]
-  Objective range  [1e+00, 1e+00]
-  Bounds range     [1e+00, 1e+00]
-  RHS range        [2e+00, 8e+01]
-Found heuristic solution: objective -0.0000000
-Presolve removed 75087 rows and 73801 columns
-Presolve time: 0.47s
-Presolved: 2839 rows, 1889 columns, 7390 nonzeros
-Variable types: 150 continuous, 1739 integer (570 binary)
-Performing another presolve...
-Presolve removed 2759 rows and 1743 columns
-Presolve time: 0.00s
-Found heuristic solution: objective 2.0000000
-
-Root relaxation: objective 1.400000e+01, 39 iterations, 0.00 seconds (0.00 work units)
-
-    Nodes    |    Current Node    |     Objective Bounds      |     Work
- Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
-
-*    0     0               0      14.0000000   14.00000  0.00%     -    0s
-
-Explored 1 nodes (39 simplex iterations) in 0.52 seconds (0.73 work units)
-Thread count was 8 (of 8 available processors)
-
-Solution count 3: 14 2 -0 
-
-Optimal solution found (tolerance 1.00e-04)
-Best objective 1.400000000000e+01, best bound 1.400000000000e+01, gap 0.0000%
+Best objective 2.800000000000e+01, best bound 2.800000000000e+01, gap 0.0000%

@@ -13,6 +13,7 @@ __pycache___
 # Ignore gurobi license files
 gurobi.lic
 # Ignore logs
-*.log
-
+log/
+# Ignore input/output files
+inp-params.txt
 solution.txt

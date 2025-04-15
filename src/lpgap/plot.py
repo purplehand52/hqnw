@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from constants import *
-df = np.loadtxt(Path(__file__) / Path('out.csv'), delimiter=",", dtype=float)
+df = np.loadtxt(Path(__file__).parent / Path('out.csv'), delimiter=",", dtype=float)
 
 print(df.T)
 

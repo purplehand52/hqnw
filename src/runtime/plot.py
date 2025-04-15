@@ -25,4 +25,4 @@ for i, x in zip(s[0], df):
     
 plt.legend()
 
-plt.savefig(Path(__file__).parent / Path(f"{a}.png"))
+plt.savefig(Path(__file__).parent / Path(f"{a}.pdf"))

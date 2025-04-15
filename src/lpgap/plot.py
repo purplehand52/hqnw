@@ -20,4 +20,4 @@ for i, x in zip([0.5, 1, 1.5, 2, 2.5, 3], df.T[1]):
     
 plt.legend()
 
-plt.savefig(Path(__file__).parent / Path('lpgap.png'))
+plt.savefig(Path(__file__).parent / Path('lpgap.pdf'))

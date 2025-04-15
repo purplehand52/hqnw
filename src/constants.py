@@ -19,4 +19,4 @@ PLT_LPGAP_FILE = LPGAP_DIR / Path('plot.py')
 PLT_RUNTIME_FILE = RUNTIME_DIR / Path('plot.py')
 
 # Parameters
-RUNS = 3
+RUNS = 5

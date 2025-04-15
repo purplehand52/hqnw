@@ -4,6 +4,9 @@ import networkx as nx
 import math
 import matplotlib.pyplot as plt
 
+# Seed the random number generator
+random.seed(42)
+
 class Params:
     """
     Class to hold parameters for generating a random directed graph.

@@ -4,7 +4,7 @@ src/include/
 src/lib/
 src/lib64/
 src/share/
-__pycache___
+__pycache__
 
 # Ignore all png files
 *.png

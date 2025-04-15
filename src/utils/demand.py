@@ -5,8 +5,8 @@ import math
 
 Demand = namedtuple('Demand', ['u', 'v', 'd', 'f'])
 
-def generate_demand(params: Params):
-    return [(
+def generate_demand(params: Params) -> list[Demand]:
+    return [Demand(
         i, (i+1)%params.num_clients, 
         math.ceil(1 + random.expovariate(1/params.mean_demand)), 
         math.ceil(abs(random.gauss(params.alpha*math.sqrt(params.num_repeaters), 5)))

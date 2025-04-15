@@ -8,15 +8,15 @@ class Params:
     """
     Class to hold parameters for generating a random directed graph.
     """
-    def __init__(self, num_clients: int, num_repeaters: int, rep_coeff: float, gen_coeff: float, client_coeff: float, mean_cap: int, mean_demand: int, alpha: float = 2):
-        self.num_clients = num_clients
-        self.num_repeaters = num_repeaters
-        self.rep_coeff = rep_coeff
-        self.gen_coeff = gen_coeff
-        self.client_coeff = client_coeff
-        self.mean_cap = mean_cap
-        self.mean_demand = mean_demand
-        self.alpha = alpha
+    # def __init__(self, num_clients: int, num_repeaters: int, rep_coeff: float, gen_coeff: float, client_coeff: float, mean_cap: int, mean_demand: int, alpha: float = 2):
+    #     self.num_clients = num_clients
+    #     self.num_repeaters = num_repeaters
+    #     self.rep_coeff = rep_coeff
+    #     self.gen_coeff = gen_coeff
+    #     self.client_coeff = client_coeff
+    #     self.mean_cap = mean_cap
+    #     self.mean_demand = mean_demand
+    #     self.alpha = alpha
         
     def __init__(self, fname: str):
         """
@@ -151,17 +151,17 @@ def save_graph(G: nx.DiGraph, filename: str):
     return
 
 # Example usage
-if __name__ == "__main__":
-    num_clients = 3
-    num_repeaters = 7
-    rep_coeff = 0.25
-    gen_coeff = 0.40
-    client_coeff = 0.20
-    mean_cap = 10
+# if __name__ == "__main__":
+#     num_clients = 3
+#     num_repeaters = 7
+#     rep_coeff = 0.25
+#     gen_coeff = 0.40
+#     client_coeff = 0.20
+#     mean_cap = 10
 
-    # Generate the graph
-    G = generate_random_hqnw(num_clients, num_repeaters, rep_coeff, gen_coeff, client_coeff, mean_cap)
-    draw_graph(G, filename="hqnw_graph.png")    
+#     # Generate the graph
+#     G = generate_random_hqnw(num_clients, num_repeaters, rep_coeff, gen_coeff, client_coeff, mean_cap)
+#     draw_graph(G, filename="hqnw_graph.png")    
 
-    # Save the graph to a GML file
-    save_graph(G, filename="hqnw_graph.gml")
+#     # Save the graph to a GML file
+#     save_graph(G, filename="hqnw_graph.gml")

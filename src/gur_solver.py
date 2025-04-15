@@ -6,11 +6,12 @@ import gurobipy as gp
 from gurobipy import GRB
 import networkx as nx
 from utils.gen_graph import generate_random_hqnw, Params
-from utils.demand import generate_demand
+from utils.demand import generate_demand, Demand
 import gurobi_logtools as glt
+from constants import *
 # Define Problem class
 
-def edge_formulation(G: nx.DiGraph, demands: list[tuple[int, int], int, int], relaxed: bool = False):
+def edge_formulation(G: nx.DiGraph, demands: list[Demand], relaxed: bool = False):
     """
     Define the flow problem on a quantum hierarchical network.
 
@@ -18,16 +19,17 @@ def edge_formulation(G: nx.DiGraph, demands: list[tuple[int, int], int, int], re
         G (nx.DiGraph): 
             Directed graph representing the quantum network.
         demand (List[Demand]): 
-            Contains source, destination clients, qubit demand between them, and distance threshold
-            for each demand.
+            Contains source, destination clients, qubit demand between them, and
+            distance threshold for each demand.
+        relaxed (bool, default=False):
+            Flag for whether the flow problem should be relaxed or not.
 
     Returns:
         A tuple containing variables and the defined problem.
-
     """
     # Create a new model
-    logf = "gurobi.log" if not relaxed else "gurobi_relaxed.log"
-    model = gp.Model("QuantumFlowProblem", env=gp.Env(logf))
+    logf = LP_LOG if not relaxed else LP_RELAXED_LOG
+    model = gp.Model("QuantumFlowProblem", env=gp.Env(str(logf.absolute())))
 
     # Variables
     # Indicator variables for each demand (chi)
@@ -117,16 +119,16 @@ def edge_formulation(G: nx.DiGraph, demands: list[tuple[int, int], int, int], re
     return model, demand_vars, flow_vars, potentials, edge_deltas
 
 
-def path_formulation(G: nx.DiGraph, demands: list[tuple[int, int], int, int]):
+def path_formulation(G: nx.DiGraph, demands: list[Demand]):
     """
     Define the flow problem on a quantum hierarchical network.
 
     Parameters:
-    G (nx.DiGraph): 
-        Directed graph representing the quantum network.
-    demand (List[(int, int), int, int]): 
-        Contains source, destination clients, qubit demand between them, and distance threshold
-        for each demand.
+        G (nx.DiGraph): 
+            Directed graph representing the quantum network.
+        demand (List[(int, int), int, int]): 
+            Contains source, destination clients, qubit demand between them, and distance threshold
+            for each demand.
 
     Returns:
         A tuple containing variables and the defined problem.
@@ -196,9 +198,9 @@ def solve_flow_problem(model: gp.Model):
     # Check if the model is feasible
     if model.status == GRB.OPTIMAL:
         # print("Optimal solution found:")
-        with open("solution.txt", "w") as f:
+        with open(SOLUTION_FILE, "w") as f:
             for var in model.getVars():
-                print(f"{var.varName}: {var.x}", file=f)
+                print(f"{var.VarName}: {var.X}", file=f)
             print(f"Objective value: {model.objVal}", file=f)
             
         print("Total work?: ", model.Work)
@@ -206,13 +208,13 @@ def solve_flow_problem(model: gp.Model):
         print("No optimal solution found.")
         return None
 
-def runtimes(params: Params):
+def runtime(params: Params):
     demand = generate_demand(params)
     
-    with open("gurobi.log", "w") as f:
+    with open(LP_LOG, "w") as f:
         pass
 
-    for _ in range(3):
+    for _ in range(RUNS):
         G = generate_random_hqnw(params)
         print(f"Generated graph with {len(G.nodes)} nodes and {len(G.edges)} edges.")
         # Define the flow problem
@@ -224,45 +226,42 @@ def runtimes(params: Params):
     # path_model, path_demand_vars, path_flow_vars, paths, paths_e = path_formulation(G, demand)
     # solve_flow_problem(path_model)
     
-    df = glt.get_dataframe("gurobi.log")
-    with open("experiments/runtime/out.csv", "a") as f:
-        print(f"{df["Runtime"].mean():.3}", file=f)
+    df = glt.get_dataframe([str(LP_LOG.absolute())])
+    with open(OUT_RUNTIME_FILE, "a") as f:
+        print(f"{df["Runtime"].mean():.3}", file=f) # type: ignore
 
 def lpgap(params: Params):
-    with open("gurobi.log", "w") as f:
-        pass
+    with open(LP_LOG, "w") as _: pass
+    with open(LP_RELAXED_LOG, "w") as _: pass
     
-    with open("gurobi_relaxed.log", "w") as f:
-        pass
-    
-    # G = generate_random_hqnw(params)
-    G = nx.read_gml("experiments/lpgap/graph.gml")
+    G = generate_random_hqnw(params)
+    # G = nx.read_gml("experiments/lpgap/graph.gml")
         
-    for _ in range(3):
+    for _ in range(RUNS):
         demand = generate_demand(params)
+        
+        # Get exact LP
         zmodel, demand_vars, flow_vars, potentials, edge_deltas = edge_formulation(G, demand)
         # Solve the flow problem
         solve_flow_problem(zmodel)
     
+        # Get relaxed LP
         model, demand_vars, flow_vars, potentials, edge_deltas = edge_formulation(G, demand, True)
         # Solve the flow problem
         solve_flow_problem(model)
         
-    df = glt.get_dataframe("gurobi.log")
-    df_relaxed = glt.get_dataframe("gurobi_relaxed.log")
+    df = glt.get_dataframe([str(LP_LOG.absolute())])
+    df_relaxed = glt.get_dataframe([str(LP_RELAXED_LOG.absolute())])
 
     # print(zmodel.ObjVal, model.ObjVal)
-    with open("experiments/lpgap/out.csv", "a") as f:
-        print(f"{df["ObjVal"].mean()},{df_relaxed["ObjVal"].mean()}", file=f)
-    
+    with open(OUT_LPGAP_FILE, "a") as f:
+        print(f"{df["ObjVal"].mean()},{df_relaxed["ObjVal"].mean()}", file=f) # type: ignore
+
 if __name__ == "__main__":
-    params = Params("inp-params.txt")
+    params = Params(str(INP_FILE.absolute()))
 
     match sys.argv[1]: 
-        case "runtimes":
-            runtimes(params)
+        case "runtime":
+            runtime(params)
         case "lpgap":
             lpgap(params)
-
-    
-        

@@ -76,9 +76,9 @@ def generate_random_hqnw(params: Params) -> nx.DiGraph:
     # Add edges from generator to repeaters
     for i in range(params.num_repeaters):
         if random.random() < params.gen_coeff:
-            # capacity = math.ceil(random.gauss(mean_cap, mean_cap/2))
             # Changed to expo to avoid negative capacity
-            capacity = math.ceil(random.expovariate(1/params.mean_cap)) + 1
+            # Higher capacity for generator to repeater edges
+            capacity = math.ceil(random.expovariate(0.618/params.mean_cap)) + 1
             G.add_edge("generator", f"repeater_{i}", capacity=capacity)
 
     # Add edges from repeaters to other repeaters

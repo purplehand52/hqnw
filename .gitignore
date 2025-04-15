@@ -17,3 +17,4 @@ log/
 # Ignore input/output files
 inp-params.txt
 solution.txt
+*.csv

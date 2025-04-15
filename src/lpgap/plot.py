@@ -1,8 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-df = np.loadtxt("experiments/lpgap/out.csv", delimiter=",", dtype=float)
-print(df.T)
+from constants import *
+df = np.loadtxt(Path(__file__) / Path('out.csv'), delimiter=",", dtype=float)
 
+print(df.T)
 
 plt.plot([0.5, 1, 1.5, 2, 2.5, 3], df.T[0], label='Integral')
 plt.plot([0.5, 1, 1.5, 2, 2.5, 3], df.T[1], label='Relaxed')
@@ -19,4 +20,4 @@ for i, x in zip([0.5, 1, 1.5, 2, 2.5, 3], df.T[1]):
     
 plt.legend()
 
-plt.savefig(f"experiments/lpgap/lpgap.png")
+plt.savefig(Path(__file__).parent / Path('lpgap.png'))

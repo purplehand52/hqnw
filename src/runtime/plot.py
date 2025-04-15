@@ -24,5 +24,6 @@ for i, x in zip(s[0], df):
     plt.annotate(f"({i}, {x:.3})", (i, x))
     
 plt.legend()
+plt.tight_layout()
 
 plt.savefig(Path(__file__).parent / Path(f"{a}.pdf"))

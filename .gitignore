@@ -10,6 +10,8 @@ __pycache__
 *.png
 # Ignore all gml files
 *.gml
+# Ignore all pdf files
+*.pdf
 # Ignore gurobi license files
 gurobi.lic
 # Ignore logs

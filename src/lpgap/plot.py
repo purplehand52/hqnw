@@ -19,5 +19,6 @@ for i, x in zip([0.5, 1, 1.5, 2, 2.5, 3], df.T[1]):
     plt.annotate(f"({i}, {x:.3})", (i, x))
     
 plt.legend()
+plt.tight_layout()
 
 plt.savefig(Path(__file__).parent / Path('lpgap.pdf'))

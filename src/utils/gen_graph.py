@@ -38,7 +38,9 @@ class Params:
                 self.alpha = float(lines[7].strip())
             else:
                 self.alpha = 2
-            
+    
+    def __str__(self) -> str:
+        return f"Params(num_clients={self.num_clients}, num_repeaters={self.num_repeaters}, rep_coeff={self.rep_coeff}, gen_coeff={self.gen_coeff}, client_coeff={self.client_coeff}, mean_cap={self.mean_cap}, demand={self.mean_demand})"
         
 
 # Generate random hierarchical quantum network directional graph with capacities for each edge

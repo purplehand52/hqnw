@@ -215,7 +215,7 @@ def runtime(params: Params):
         pass
 
     G = generate_random_hqnw(params)
-    print(f"{params}: Generated graph with {len(G.nodes)} nodes and {len(G.edges)} edges.", file=open('graph_runtime.txt', 'a'))
+    # print(f"{params}: Generated graph with {len(G.nodes)} nodes and {len(G.edges)} edges.", file=open('graph_runtime.txt', 'a'))
 
     for _ in range(RUNS):
         # Define the flow problem
@@ -236,7 +236,7 @@ def lpgap(params: Params):
     with open(LP_RELAXED_LOG, "w") as _: pass
     
     G = generate_random_hqnw(params)
-    print(f"{params}: Generated graph with {len(G.nodes)} nodes and {len(G.edges)} edges.", file=open('graph_lpgap.txt', 'a'))
+    # print(f"{params}: Generated graph with {len(G.nodes)} nodes and {len(G.edges)} edges.", file=open('graph_lpgap.txt', 'a'))
     # G = nx.read_gml("experiments/lpgap/graph.gml")
         
     for _ in range(RUNS):

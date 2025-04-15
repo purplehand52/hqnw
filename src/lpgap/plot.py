@@ -10,7 +10,7 @@ plt.plot([0.5, 1, 1.5, 2, 2.5, 3], df.T[1], label='Relaxed')
 plt.grid()
 plt.xticks([0.5, 1, 1.5, 2, 2.5, 3])
 plt.xlabel('Alpha')
-plt.ylabel("Demands Satisfied (s)")
+plt.ylabel("Demands Satisfied")
 plt.title(f"Demands Satisfied vs Alpha")
 for i, x in zip([0.5, 1, 1.5, 2, 2.5, 3], df.T[0]):
     plt.annotate(f"({i}, {x:.3})", (i, x))

@@ -111,6 +111,9 @@ def generate_random_hqnw(params: Params) -> nx.DiGraph:
     # Return the generated graph
     return G
 
+def all_clients_connected(G: nx.DiGraph):
+    pass
+
 # Draw the graph
 def draw_graph(G: nx.DiGraph, filename: str | None = None):
     """

@@ -18,11 +18,10 @@ To generate the plots, run the following command from the `src` directory.
 > A Gurobi license is required to run these experiments.
 
 ```bash
-python <name>/run.sh
+python <name>/run.py
 ```
 
-where `<name>` is the name of the experiment. It can be either `lpgap` or
-`runtime`. 
+where `<name>` is the name of the experiment. It can be either `lpgap`, `runtime`, or `p2pgap`.
 
 ## Input Format
 

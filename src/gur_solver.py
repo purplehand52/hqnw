@@ -1,6 +1,7 @@
 # Define and solve flow problem on a quantum hierarchical network using gurobi
 
 import sys
+from copy import deepcopy
 import itertools
 import gurobipy as gp
 from gurobipy import GRB
@@ -11,7 +12,7 @@ import gurobi_logtools as glt
 from constants import *
 # Define Problem class
 
-def edge_formulation(G: nx.DiGraph, demands: list[Demand], relaxed: bool = False):
+def edge_formulation(G: nx.DiGraph, demands: list[Demand], relaxed: bool = False, logf=None):
     """
     Define the flow problem on a quantum hierarchical network.
 
@@ -114,6 +115,112 @@ def edge_formulation(G: nx.DiGraph, demands: list[Demand], relaxed: bool = False
             # Potential difference constraints
             # p_v - p_u >= delta
             model.addConstr(potentials[i, node_indices[edge[1]]] - potentials[i, node_indices[edge[0]]] >= edge_deltas[i, k], name=f"potential_difference_{i}_{k}")
+
+    # Return the model and variables
+    return model, demand_vars, flow_vars, potentials, edge_deltas
+
+
+def p2p_formulation(G: nx.DiGraph, demands: list[Demand], relaxed: bool = False, logf=None):
+    """
+    Define the flow problem on a quantum hierarchical network.
+
+    Parameters:
+        G (nx.DiGraph): 
+            Directed graph representing the quantum network.
+        demand (List[Demand]): 
+            Contains source, destination clients, qubit demand between them, and
+            distance threshold for each demand.
+        relaxed (bool, default=False):
+            Flag for whether the flow problem should be relaxed or not.
+
+    Returns:
+        A tuple containing variables and the defined problem.
+    """
+    # Create a new model
+    if logf is None:
+        logf = P2P_LOG if not relaxed else LP_RELAXED_LOG
+        
+    model = gp.Model("QuantumFlowProblem", env=gp.Env(str(logf.absolute())))
+
+    # Variables
+    # Indicator variables for each demand (chi)
+    demand_vars = model.addVars(len(demands), vtype= GRB.BINARY if not relaxed else GRB.CONTINUOUS , name="demand_vars", ub=1, lb=0)
+
+    # Flow variables for each demand and each edge (f)
+    flow_vars = model.addVars(len(demands), len(G.edges()), vtype=GRB.INTEGER if not relaxed else GRB.CONTINUOUS, name="flow_vars", lb=0)
+
+    # Potential variables for every demand and node (p)
+    potentials = model.addVars(len(demands), len(G.nodes()), vtype=GRB.CONTINUOUS, name="potentials")
+
+    # Delta variables for each demand and each edge (delta)
+    edge_deltas = model.addVars(len(demands), len(G.edges()), vtype=GRB.BINARY if not relaxed else GRB.CONTINUOUS, name="edge_deltas", ub=1, lb=0)
+
+    # Objective function
+    # Maximize the number of demands satisfied
+    model.setObjective(gp.quicksum(demand_vars[i] for i in range(len(demands))), GRB.MAXIMIZE)
+
+    # Mapping edges to indices
+    edge_indices = {edge: i for i, edge in enumerate(G.edges())}
+    # Mapping nodes to indices
+    node_indices = {node: i for i, node in enumerate(G.nodes())}
+
+    # Constraints
+    # Superimposed flow on each edge
+    for i, edge in enumerate(G.edges()):
+        # SUM_OVER_DEMANDS[f_d,e] <= capacity_e
+        # This is a change from the original code
+        # Basically, we set flow into a client to be zero if `chi_d` is 0, so that propagates across the graph to make
+        # the flow zero everywhere.
+        model.addConstr(gp.quicksum(flow_vars[j, i] for j in range(len(demands))) <= G.edges[edge]['capacity'], name=f"superimposed_flow_{i}")
+        for j, _ in enumerate(demands):
+            # Flow on edge is less than capacity
+            model.addConstr(flow_vars[j, i] <=  G.edges[edge]['capacity'], name=f"flow_capacity_{i}_{j}")
+            # model.addConstr(edge_deltas[j, i] + edge_deltas[j, edge_indices[(edge[1], edge[0])]] <= 1, name=f"edge_delta_{i}_{j}")
+            
+    # Flow conservation constraints
+    for i, node in enumerate(G.nodes()):
+        # print(G.nodes[node].get('type', 'unknown'))
+        # Check if node is not a repeater
+        # Generator has no constraints and clients are sinks. 
+        if G.nodes[node]['type'] != 'repeater':
+            continue
+        for j in range(len(demands)):
+            # Flow conservation: incoming flow = outgoing flow
+            model.addConstr(
+                gp.quicksum(flow_vars[j, edge_indices[edge]] for edge in G.in_edges(node)) -
+                gp.quicksum(flow_vars[j, edge_indices[edge]] for edge in G.out_edges(node)) == 0,
+                name=f"flow_conservation_{i}_{j}"
+            )
+    
+
+    # Sink constraints
+    for i, (src, dst, qubits, thres) in enumerate(demands):
+        # Flow conservation at src
+        # This is a change from the original code
+        # Refer to capacity constraint. Flow is zero if `chi_d` is 0.
+        # This makes the program linear, which is a good improvement over bilinear.
+        # Even for ILP, this is faster than the path stuff.
+        model.addConstr(
+            gp.quicksum(flow_vars[i, edge_indices[edge]] for edge in G.out_edges(f"client_{src}")) == qubits * demand_vars[i],
+            name=f"flow_conservation_src_{i}"
+        )
+        assert len(G.out_edges(f"client_{src}")) > 0
+        # Flow conservation at dst
+        model.addConstr(
+            gp.quicksum(flow_vars[i, edge_indices[edge]] for edge in G.in_edges(f"client_{dst}")) == qubits * demand_vars[i],
+            name=f"flow_conservation_dst_{i}"
+        )
+        assert len(G.out_edges(f"client_{dst}")) > 0
+
+        model.addConstr(potentials[i, src] == 0, name=f"potential_source_{i}_{src}")
+        model.addConstr(potentials[i, dst] <= thres, name=f"potential_target_{i}_{dst}")
+        for k, edge in enumerate(G.edges()):
+            # Potential difference constraints
+            # p_v - p_u >= delta
+            model.addConstr(potentials[i, node_indices[edge[1]]] - potentials[i, node_indices[edge[0]]] >= edge_deltas[i, k], name=f"potential_difference_{i}_{k}")
+
+    # Potential constraints
+    # for i, (src, dst, _, thres) in enumerate(demands):
 
     # Return the model and variables
     return model, demand_vars, flow_vars, potentials, edge_deltas
@@ -259,6 +366,45 @@ def lpgap(params: Params):
     with open(OUT_LPGAP_FILE, "a") as f:
         print(f"{df["ObjVal"].mean()},{df_relaxed["ObjVal"].mean()}", file=f) # type: ignore
 
+def p2pgap(params: Params):
+    with open(LP_LOG, "w") as _: pass
+    with open(P2P_LOG, "w") as _: pass
+    
+    G = generate_random_hqnw(params)
+    otherG: nx.DiGraph = deepcopy(G)
+    
+    for edge in G.edges():
+        otherG.add_edge(edge[1], edge[0], capacity=G.edges[edge]['capacity'])
+        
+    otherG.nodes['generator']['type'] = 'repeater'
+    print(G, len(G.out_edges("generator")))
+    print(otherG)
+    
+    # print(f"{params}: Generated graph with {len(G.nodes)} nodes and {len(G.edges)} edges.", file=open('graph_p2pgap.txt', 'a'))
+    
+    for _ in range(RUNS):
+        demand = generate_demand(params)
+        
+        # Get other LP
+        zmodel, demand_vars, flow_vars, potentials, edge_deltas = p2p_formulation(otherG, demand, logf=P2P_LOG)
+        # Solve the flow problem
+        solve_flow_problem(zmodel)
+    
+        # Get our LP
+        model, demand_vars, flow_vars, potentials, edge_deltas = edge_formulation(G, demand)
+        # Solve the flow problem
+        solve_flow_problem(model)
+        
+    df = glt.get_dataframe([str(LP_LOG.absolute())])
+    df_p2p = glt.get_dataframe([str(P2P_LOG.absolute())])
+
+    print(zmodel.ObjVal, model.ObjVal)
+    # with open(OUT_P2PGAP_FILE, "a") as f:
+    #     print(f"{df["ObjVal"].mean()},{df_relaxed["ObjVal"].mean()}", file=f) # type: ignore
+    # df = glt.get_dataframe([str(LP_LOG.absolute())])
+    with open(OUT_P2PGAP_FILE, "a") as f:
+        print(f"{df["ObjVal"].mean():.3},{df_p2p["ObjVal"].mean():.3}", file=f) # type: ignore
+
 if __name__ == "__main__":
     params = Params(str(INP_FILE.absolute()))
 
@@ -267,3 +413,5 @@ if __name__ == "__main__":
             runtime(params)
         case "lpgap":
             lpgap(params)
+        case "p2pgap":
+            p2pgap(params)
